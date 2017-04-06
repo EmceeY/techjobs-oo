@@ -59,7 +59,8 @@ public class JobController {
         }
         else{
             //add jobForm to collection of jobs
-           jobData = jobData.add(jobForm);
+
+           jobData = jobData.add( jobForm);
            return "job-detail";
         }
 
