@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -23,7 +24,7 @@ public class JobController {
 
     // The detail display for a given Job at URLs like /job?id=17
     @RequestMapping( value = "", method = RequestMethod.GET)
-    public String index(Model model, @PathVariable int id) {
+    public String index(Model model, @RequestParam int id) {
 
         Job job = jobData.findById(id);
 
@@ -52,7 +53,15 @@ public class JobController {
         // new Job and add it to the jobData data store. Then
         // redirect to the job detail view for the new Job.
 
-        return "";
+        if (errors != null){
+            model.addAttribute("error", errors);
+            return "new-job";
+        }
+        else{
+            //add jobForm to collection of jobs
+           jobData = jobData.add(jobForm);
+           return "job-detail";
+        }
 
     }
 }

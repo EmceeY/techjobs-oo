@@ -20,7 +20,7 @@ public class JobForm {
     private String name;
 
     @NotNull
-    private int employerId;
+    private int employer;
 
     @NotNull
     private String location;
@@ -95,11 +95,11 @@ public class JobForm {
     }
 
     public int getEmployerId() {
-        return employerId;
+        return employer;
     }
 
     public void setEmployerId(int employerId) {
-        this.employerId = employerId;
+        this.employer = employerId;
     }
 
     public ArrayList<Employer> getEmployers() {
