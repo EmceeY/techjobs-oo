@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.util.ArrayList;
 
+import static org.launchcode.models.JobFieldType.EMPLOYER;
+
 /**
  * Created by LaunchCode
  */
@@ -63,22 +65,25 @@ public class JobController {
 
             String name = jobForm.getName();
 
-            Employer employer =  jobForm.getEmployerId();
-            Location location = jobForm.getLocation();
-            PositionType position = jobForm.getPositionType();
-            CoreCompetency coreCompetency = jobForm.getCoreCompetency();
+            int employerId =  jobForm.getEmployerId();
+            int locationId = jobForm.getLocation();
+            int positionId = jobForm.getPositionType();
+            int coreCompetencyId = jobForm.getCoreCompetency();
 
-            Job newJob = new Job(name, employer, location, position, coreCompetency);
+            Employer employer1 = jobForm.getEmployers().get(employerId);
+            Location location1 = jobForm.getLocations().get(locationId);
+            PositionType position1 = jobForm.getPositionTypes().get(positionId);
+            CoreCompetency competency1 = jobForm.getCoreCompetencies().get(coreCompetencyId);
+
+            Job newJob = new Job(name, employer1, location1, position1, competency1);
 
             jobData.add(newJob);
 
-            String employerName = newJob.getEmployer().getValue();
-
             model.addAttribute("name", name);
-            model.addAttribute("employer", employerName);
-            model.addAttribute("location", newJob.getLocation());
-            model.addAttribute("positionType", newJob.getPositionType());
-            model.addAttribute("coreCompetency", newJob.getCoreCompetency());
+            model.addAttribute("employer", employer1);
+            model.addAttribute("location", location1);
+            model.addAttribute("positionType", position1);
+            model.addAttribute("coreCompetency", competency1);
 
             //add jobForm to collection of jobs
 
