@@ -1,7 +1,6 @@
 package org.launchcode.controllers;
 
-import org.launchcode.models.CoreCompetency;
-import org.launchcode.models.Job;
+import org.launchcode.models.*;
 import org.launchcode.models.forms.JobForm;
 import org.launchcode.models.data.JobData;
 import org.springframework.stereotype.Controller;
@@ -31,10 +30,10 @@ public class JobController {
         Job job = jobData.findById(id);
 
         model.addAttribute("name", job.getName());
-        model.addAttribute("employer", job.getEmployer());
-        model.addAttribute("location", job.getLocation());
-        model.addAttribute("positionType", job.getPositionType());
-        model.addAttribute("coreCompetency", job.getCoreCompetency());
+        model.addAttribute("employer", job.getEmployer().getValue());
+        model.addAttribute("location", job.getLocation().getValue());
+        model.addAttribute("positionType", job.getPositionType().getValue());
+        model.addAttribute("coreCompetency", job.getCoreCompetency().getValue());
         model.addAttribute("ID", job.getId());
 
         // TODO #1 - get the Job with the given ID and pass it into the view
@@ -55,21 +54,34 @@ public class JobController {
         // new Job and add it to the jobData data store. Then
         // redirect to the job detail view for the new Job.
 
-        if (errors != null){
-            model.addAttribute("error", errors);
+        if (errors.getErrorCount() != 0){
+
+            model.addAttribute("error",errors.getGlobalError());
             return "new-job";
         }
         else {
-            Job newJob = new Job();
-            newJob.setName(jobForm.getName());
-            newJob.setEmployer(jobForm.getEmployerId());
-            newJob.setLocation(jobForm.getLocation());
-            newJob.setCoreCompetency(jobForm.getCoreCompetency());
 
-            model.addAttribute("id", newJob.getId());
+            String name = jobForm.getName();
+
+            Employer employer =  jobForm.getEmployerId();
+            Location location = jobForm.getLocation();
+            PositionType position = jobForm.getPositionType();
+            CoreCompetency coreCompetency = jobForm.getCoreCompetency();
+
+            Job newJob = new Job(name, employer, location, position, coreCompetency);
+
+            jobData.add(newJob);
+
+            String employerName = newJob.getEmployer().getValue();
+
+            model.addAttribute("name", name);
+            model.addAttribute("employer", employerName);
+            model.addAttribute("location", newJob.getLocation());
+            model.addAttribute("positionType", newJob.getPositionType());
+            model.addAttribute("coreCompetency", newJob.getCoreCompetency());
 
             //add jobForm to collection of jobs
-            jobData.add(newJob);
+
 
             return "job-detail";
         }
